@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    image: traefik:v2.1
+    container_name: proxy
+    ports:
+      - "80:80"
+      - "8080:8080"
+    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - ./traefik.yml:/traefik.yml
+      - ./traefik.log:/traefik.log
+      - ./config/config.yml:/config.yml
+      - ./pages:/pages
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nginx.rule=Host(`nginx.app.test`)"
+        - "traefik.http.routers.nginx.entrypoints=web"
+        # - "traefik.http.middlewares.test-replacepath.replacepath.path=/bar"
+        # - "traefik.http.routers.nginx.middlewares=test-replacepath"
+        # - "traefik.http.middlewares.nginxpathstrip.stripprefix.prefixes=/traefik"
+        # - "traefik.http.routers.nginx.middlewares=nginxpathstrip"
+  
+  # apache:
+  #   image: httpd
+  #   container_name: apache
+  #   ports:
+  #     - "8081:80"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.apache.rule=Host(`apache.app.test`)"

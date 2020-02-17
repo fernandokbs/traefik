@@ -1,0 +1,20 @@
+## Static configuration
+entryPoints:
+    web:
+     address: ":80"
+
+providers:
+    docker:
+        endpoint: "unix:///var/run/docker.sock"
+        exposedByDefault: false
+    # file:
+    #     filename: /config.yml
+    #     watch: true
+
+api:
+    insecure: true
+
+log:
+    filePath: "/traefik.log"
+    level: DEBUG
+    format: json
